@@ -1,0 +1,113 @@
+﻿@inject StateContainer stateContainer
+
+<div class="settings">
+    <Buttons Class="difficulty">
+        <Button Class="easy" Active Clicked="@OnEasyClick" Style=@easyStyle>Easy</Button>
+        <Button Class="hard" Clicked="@OnHardClick" Style=@hardStyle>Hard</Button>
+    </Buttons>
+    <Buttons Class="time">
+        <Button Class="thirty" Active Clicked="@OnThirtyClick" Style=@thirtyStyle>30</Button>
+        <Button Class="sixty" Clicked="@OnSixtyClick" Style=@sixtyStyle>60</Button>
+    </Buttons>
+    <Row>
+        <div class="timer" style=@timerStyle>@stateContainer.Timer</div>
+    </Row>
+</div>
+
+@code {
+    [Parameter]
+    public EventCallback<string> OnTimerEndCallBack { get; set; }
+    [Parameter]
+    public EventCallback<string> OnSettingChangeCallBack { get; set; }
+
+    private string? easyStyle;
+    private string? hardStyle;
+    private string? thirtyStyle;
+    private string? sixtyStyle;
+    private string timerStyle = "visibility: hidden;";
+
+    private static Timer? timer;  
+
+    private Task OnEasyClick() 
+    {
+        easyStyle = "opacity: 100%;";
+        hardStyle = "opacity: 50%;";
+        stateContainer.Difficulty = 0;
+        StateHasChanged();
+        ChangeSetting();
+        return Task.CompletedTask;
+    }
+
+    private Task OnHardClick()
+    {
+        easyStyle = "opacity: 50%;";
+        hardStyle = "opacity: 100%;";
+        stateContainer.Difficulty = 1;
+        StateHasChanged();
+        ChangeSetting();
+        return Task.CompletedTask;
+    }
+
+    private Task OnThirtyClick()
+    {
+        thirtyStyle = "opacity: 100%;";
+        sixtyStyle = "opacity: 50%;";
+        stateContainer.Duration = 30;
+        StateHasChanged();
+        ChangeSetting();
+        return Task.CompletedTask;
+    }
+
+    private Task OnSixtyClick()
+    {
+        thirtyStyle = "opacity: 50%;";
+        sixtyStyle = "opacity: 100%;";
+        stateContainer.Duration = 60;
+        StateHasChanged();
+        ChangeSetting();
+        return Task.CompletedTask;
+    }
+
+    public void RefreshGame()
+    {
+        timer.Stop();
+        stateContainer.Timer = stateContainer.Duration;
+        timerStyle = "visibility: hidden;";
+        timer.AutoReset = false;
+        StateHasChanged();
+    }
+
+    public void StartTimer()
+    {
+        timer = new Timer(1000);
+        timerStyle = "visibility: visible;";
+        timer.Elapsed += CountDownTimer;
+        timer.Start();
+    }
+
+    public async void CountDownTimer(Object source, System.Timers.ElapsedEventArgs e)
+    {
+        if (stateContainer.Timer > 0)
+        {
+            stateContainer.Timer -= 1;
+        }
+        else
+        {
+            timerStyle = "visibility: hidden;";
+            timer.Stop();
+            timer.AutoReset = false;
+            await FinishGame();
+        }
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task FinishGame()
+    {
+        await OnTimerEndCallBack.InvokeAsync();
+    }
+
+    private async Task ChangeSetting()
+    {
+        await OnSettingChangeCallBack.InvokeAsync();
+    }
+}

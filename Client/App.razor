@@ -1,0 +1,67 @@
+﻿<Blazorise.ThemeProvider Theme="@theme">    
+    <CascadingAuthenticationState>
+        <Router AppAssembly="@typeof(App).Assembly">
+            <Found Context="routeData">
+                <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+                    <NotAuthorized>
+                        @if (context.User.Identity?.IsAuthenticated != true)
+                        {
+                            <RedirectToLogin />
+                        }
+                        else
+                        {
+                            <p role="alert">You are not authorized to access this resource.</p>
+                        }
+                    </NotAuthorized>
+                </AuthorizeRouteView>
+                <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+            </Found>
+            <NotFound>
+                <PageTitle>Not found</PageTitle>
+                <LayoutView Layout="@typeof(MainLayout)">
+                    <p role="alert">Sorry, there's nothing at this address.</p>
+                </LayoutView>
+            </NotFound>
+        </Router>
+    </CascadingAuthenticationState>
+</Blazorise.ThemeProvider>
+
+@code{
+    private Theme theme = new()
+    {
+        ColorOptions = new()
+        {
+            Primary = "#0288D1",
+            Secondary = "cyan",
+            //Success = "#23C02E",
+            //Info = "#9BD8FE",
+            //Warning = "#F8B86C",
+            //Danger = "#F95741",
+            //Light = "#F0F0F0",
+            //Dark = "#535353",
+        },
+        TextColorOptions = new()
+        {
+        },
+        //ButtonOptions = new ThemeButtonOptions { },
+        //DropdownOptions = new ThemeDropdownOptions { },
+        InputOptions = new()
+        {
+            CheckColor = "#0288D1",
+        },
+        //CardOptions = new ThemeCardOptions { },
+        //ModalOptions = new ThemeModalOptions { },
+        //TabsOptions = new ThemeTabsOptions { },
+        //ProgressOptions = new ThemeProgressOptions { },
+        //AlertOptions = new ThemeAlertOptions { },
+        //BreadcrumbOptions = new ThemeBreadcrumbOptions { },
+        //BadgeOptions = new ThemeBadgeOptions { },
+        //PaginationOptions = new ThemePaginationOptions { },
+        //TooltipOptions = new ThemeTooltipOptions
+        //{
+        //    BackgroundColor = "#22c8ce",
+        //    BackgroundOpacity = .7f,
+        //    Color = "#ff0000",
+        //},
+    };
+ }

@@ -1,0 +1,66 @@
+﻿@inject StateContainer stateContainer
+
+<Modal @ref="metric" Style="background-color: #555555">
+    <ModalContent Centered>
+        <ModalHeader>
+            <ModalTitle Style="color: #555555">Here are your results!</ModalTitle>
+            <CloseButton tabindex="-1" />
+        </ModalHeader>
+        <ModalBody>
+            <div class="metric">
+                <div class="accuracy">
+                    <div class="head">Accuracy</div>
+                    <div class="accuracy-count">@stateContainer.Accuracy</div>
+                </div>
+                <div class="wpm">
+                    <div class="head">Words/min</div>
+                    <div class="wpm-count">@stateContainer.WPM</div>
+                </div>
+                <div class="errors">
+                    <div class="head">Errors</div>
+                    <div class="errors-count">@stateContainer.Error</div>
+                </div>
+            </div>
+            <img tabindex="0" src="refresh-black.svg" alt="Referesh button" class="refresh" @onkeydown=@RefreshGameOnEnter @onkeydown:preventDefault="@isPreventNonEnter" onclick=@RefreshGame />
+        </ModalBody>
+        <ModalFooter Style="text-align: center">Your results have been recorded.</ModalFooter>
+    </ModalContent>
+</Modal>
+
+@code {
+    [Parameter]
+    public EventCallback<string> OnRefreshCallBack { get; set; }
+
+    private Modal metric;
+    private bool isPreventNonEnter { get; set; }
+
+    public Task ShowModal()
+    {
+        StateHasChanged();
+        return metric.Show();
+    }
+
+    public Task HideModal()
+    {
+        return metric.Hide();
+    }
+
+    private void RefreshGameOnEnter(KeyboardEventArgs args)
+    {
+        if (args.Key == "Enter")
+        {
+            RefreshGame();
+        }
+        else
+        {
+            this.isPreventNonEnter = false;
+        }
+    }
+
+    private async Task RefreshGame()
+    {
+        Console.WriteLine("modal refresh game");
+        await OnRefreshCallBack.InvokeAsync();
+        HideModal();
+    }
+}

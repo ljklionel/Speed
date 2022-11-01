@@ -1,0 +1,29 @@
+﻿@page "/"
+
+<PageTitle>Index</PageTitle>
+
+<div class="layout-row">
+    <Setting @ref="setting" OnTimerEndCallBack="@FinishGame" OnSettingChangeCallBack="@ChangeSetting"/>
+</div>
+<div class="layout-row">
+    <Test @ref="testArea" OnTimerStartCallBack="@StartTimer" OnRefreshCallBack="@RefreshGame"/>
+</div>
+
+<SurveyPrompt Title="How is Blazor working for you?" />
+
+@code 
+{
+    private Setting? setting;
+    private Test? testArea;
+
+    //private void FinishGame() => testArea.FinishGame();
+    //private void StartTimer() => setting.StartTimer();
+
+    private void FinishGame() => testArea.FinishGame();
+
+    private void StartTimer() => setting.StartTimer();
+
+    private void RefreshGame() => setting.RefreshGame();
+
+    private void ChangeSetting() => testArea.RefreshGame();
+}

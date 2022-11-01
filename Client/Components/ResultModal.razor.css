@@ -1,0 +1,27 @@
+﻿.errors, .accuracy, .wpm {
+    background: #555555;
+    color: white;
+    height: 80px;
+    width: 100px;
+    margin: 8px;
+    padding: 12px;
+    border-radius: 25px;
+}
+
+.errors-count {
+    color: orangered;
+}
+
+.metric {
+    display: flex;
+    justify-content: space-evenly;
+    flex: 1 1 0px;
+    margin-top: 1%;
+}
+
+.refresh {
+    height: 25px;
+    width: 25px;
+    margin-top: 10px;
+    cursor: pointer;
+}

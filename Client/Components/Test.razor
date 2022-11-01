@@ -1,0 +1,288 @@
+﻿@inject StateContainer stateContainer
+@inject PublicClient publicClient
+@inject IJSRuntime JSRuntime
+
+<div class="test-area" style=@testAreaStyle>
+    @if (string.IsNullOrEmpty(text) && letters.Count == 0)
+    {
+        <LoadingIndicator @ref="loadingIndicator"></LoadingIndicator>
+    }
+    else
+    {
+        <div tabindex="0" class="text-area">
+            <input @ref="input" tabindex="0" @onkeydown="KeyboardEventHandler" @onkeydown:preventDefault="@isPreventKey" type="text" class="input" />
+            <div style="@paragraphStyle" class="paragraph">
+                @foreach (char c in text)
+                {
+                    <Letter @ref="letterID" Character="@c" />
+                }
+                @{isRendered = true;}
+            </div>
+        </div>
+        <img tabindex="0" src="refresh-cyan.svg" alt="Referesh button" class="refresh" onclick=@RefreshGame @onkeydown=@RefreshGameOnEnter @onkeydown:preventDefault="@isPreventNonEnter" />
+        <ResultModal @ref="resultModal" OnRefreshCallBack="@RefreshGame" />
+    }
+</div>
+
+@code {
+    [Parameter]
+    public EventCallback<string> OnTimerStartCallBack { get; set; }
+    [Parameter]
+    public EventCallback<string> OnRefreshCallBack { get; set; }
+
+    private string? timerStyle;
+    private string? testAreaStyle;
+    private string? paragraphStyle;
+    private bool isPreventKey { get; set; }
+    private bool isPreventNonEnter { get; set; }
+
+    private string[]? strings;
+    private string? text;
+    private int currentIndex = 0;
+    private int rowCount = 2;
+    private int marginTop = -39;
+    private double? prevTop;
+    private bool isTyping = false;
+    private bool isDone = false;
+    private bool isRendered = false;
+    private bool isMiddleRow = false;
+    // metrics
+    private decimal totalErrors = 0;
+    private decimal typedLetters = 0;
+    private decimal totalWrongLetters = 0;
+
+    private ElementReference input;
+    private LoadingIndicator loadingIndicator;
+    private ResultModal resultModal;
+
+    List<Letter> letters = new List<Letter>();
+    Letter letterID 
+    {
+        set => letters.Add(value);
+    }
+
+    public void FinishGame()
+    {
+        paragraphStyle = "filter: blur(10px);";
+        isTyping = false;
+        isDone = true;
+        stateContainer.Error = Convert.ToInt32(totalWrongLetters);
+        if (typedLetters == 0) {
+            stateContainer.Accuracy = 0;
+        }
+        else 
+        {
+            stateContainer.Accuracy = Convert.ToInt32(((typedLetters - totalErrors) / typedLetters) * 100);
+        }
+        stateContainer.WPM = Convert.ToInt32((((typedLetters / 5) / stateContainer.Duration) * 60));
+        resultModal.ShowModal();
+    }
+
+    public async void RefreshGame()
+    {
+        //Console.WriteLine("refrehsgame");
+        await RefreshTimer();
+        await UpdateWords();
+        for (int i = 0; i < letters.Count; i++)
+        {
+            letters[i].OriginalLetter();
+        }
+        currentIndex = 0;
+        isTyping = false;
+        isDone = false;
+        typedLetters = 0;
+        totalWrongLetters = 0;
+        totalErrors = 0;
+        paragraphStyle = "filter: none;";
+        marginTop = -39;
+        rowCount = 2;
+        isMiddleRow = false;
+        StateHasChanged();
+        await resultModal.HideModal();
+    }
+
+    private async Task RefreshTimer()
+    {
+        await OnRefreshCallBack.InvokeAsync();
+    }
+
+    private async Task StartTimer()
+    {
+        await OnTimerStartCallBack.InvokeAsync();
+    }
+
+    private void RefreshGameOnEnter(KeyboardEventArgs args)
+    {
+        if (args.Key == "Enter")
+        {
+            RefreshGame();
+        }
+        else
+        {
+            this.isPreventNonEnter = false;
+        }
+    }
+
+    protected async Task UpdateLetterStatus()
+    {
+        if (!letters[0].IsActive) 
+        {
+            //Console.WriteLine("is this run?");
+            letters[0].ToggleActive();
+        }
+        stateContainer.FirstCharPosition = await letters[0].GetTop();
+        prevTop = stateContainer.FirstCharPosition;
+    }
+
+    // DONE: SOlve the text handler and complete the static to this shit: TImer -> result -> done
+    // NEXT: do the dogshit authentication
+    // SOLVE PERFORMANCE ISSUE ON KEYDOWN HANDLER
+    // NEXT: do the forms
+    protected async void KeyboardEventHandler(KeyboardEventArgs args)
+    {
+        //Console.WriteLine(letters[currentIndex].GetLetter());
+        string key = args.Key;
+        if (isDone)
+        {
+            if (key != "Tab") 
+            {
+                this.isPreventKey = true;
+            }
+        }
+        else
+        {
+            if (!isTyping && key != "Tab")
+            {
+                isTyping = true;
+                await StartTimer();
+            }
+            Regex letter = new Regex(@"^[a-z]$");
+            double top = stateContainer.FirstCharPosition;
+            double positionDiff = stateContainer.PositionDifference;
+
+            if (key == " " || key == "Backspace" || letter.IsMatch(key))
+            {
+                //Console.WriteLine(key);
+                if (key == letters[currentIndex].GetLetter())
+                {
+                    letters[currentIndex].ToggleActive();
+                    letters[currentIndex].CorrectLetter();
+                    currentIndex++;
+                    typedLetters++;
+                }
+                else if (key == "Backspace")
+                {
+                    Console.WriteLine(args.Key);
+                    if (currentIndex != 0)
+                    {
+                        letters[currentIndex].ToggleActive();
+                        letters[currentIndex].OriginalLetter();
+                        currentIndex--;
+                        if (letters[currentIndex].IsWrong) totalWrongLetters--;
+                        letters[currentIndex].OriginalLetter();
+                        letters[currentIndex].ToggleActive();
+                        typedLetters--;
+                    }
+                }
+                else if (key != letters[currentIndex].GetLetter())
+                {
+                    letters[currentIndex].WrongLetter();
+                    letters[currentIndex].ToggleActive();
+                    currentIndex++;
+                    totalErrors++;
+                    totalWrongLetters++;
+                    typedLetters++;
+                }
+
+                double newTop = await letters[currentIndex].GetTop();
+                //if (newTop != top && stateContainer.PositionDifference != positionDiff && stateContainer.PositionDifference != newTop - top)
+                //{
+                //    stateContainer.PositionDifference = newTop - top;
+                //    positionDiff = newTop - top;
+                //}
+
+                //double thirdRowPosition = top + (positionDiff * rowCount);
+                //Console.WriteLine("top: " + top);
+                //Console.WriteLine("newtop: " + newTop);
+                //Console.WriteLine("newTop - top: " + (newTop - top));
+                //Console.WriteLine("positionDiff: " + positionDiff);
+                //Console.WriteLine("prevTop: " + prevTop);
+                //Console.WriteLine("thirdrow: " + thirdRowPosition);
+
+
+                //if (newTop == thirdRowPosition)
+                //{
+                //    paragraphStyle = "margin-top: " + marginTop + "px;";
+                //    StateHasChanged();
+                //    rowCount++;
+                //    marginTop -= 39;
+                //}
+                //Console.WriteLine(letters[currentIndex].GetLetter());
+
+                if (newTop != prevTop)
+                {
+                    if (isMiddleRow) 
+                    {
+                        paragraphStyle = "margin-top: " + marginTop + "px;";
+                        //Console.WriteLine("before state change top: " + newTop);
+                        StateHasChanged();
+                        marginTop -= 39;
+                        prevTop = await letters[currentIndex].GetTop();
+                        //Console.WriteLine("after state change top: " + prevTop);
+                    }
+                    else 
+                    {
+                        prevTop = newTop;
+                        isMiddleRow = true;
+                    }
+                }
+                letters[currentIndex].ToggleActive();
+            }
+        }
+    }
+
+    private void LoadParagraphText()
+    {
+        text = "";
+        Random rnd = new Random();
+        for (int i = 0; i < 200; i++)
+        {
+            if (strings is not null)
+            {
+                int randomIndex = rnd.Next(0, strings.Length);
+                text += strings[randomIndex] + " ";
+            }
+
+        }
+
+        text.Trim();
+    }
+
+    private async Task UpdateWords()
+    {
+        if (stateContainer.Difficulty == 0)
+        {
+            strings = await publicClient.Client.GetFromJsonAsync<string[]>("easy.json");
+        }
+        else
+        {
+            strings = await publicClient.Client.GetFromJsonAsync<string[]>("hard.json");
+        }
+        LoadParagraphText();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await UpdateWords();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (isRendered && currentIndex == 0)
+        {
+            await UpdateLetterStatus();
+            await JSRuntime.InvokeVoidAsync("SetFocusToElement", input);
+            isRendered = false;
+        }
+    }
+}

@@ -1,0 +1,21 @@
+﻿::deep .easy, ::deep .thirty {
+    color: #555555;
+    background-color: cyan;
+}
+
+::deep .hard, ::deep .sixty {
+    color: #555555;
+    background-color: cyan;
+    opacity: 50%;
+}
+
+::deep .timer {
+    font-size: 25px;
+    margin-top: 8%;
+    color: cyan;
+    /*visibility: hidden;*/
+}
+
+.settings {
+    /*margin-top: 8%;*/
+}

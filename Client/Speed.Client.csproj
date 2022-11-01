@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Components\Letter.razor.css" />
+    <None Remove="Components\Result.razor.css" />
+    <None Remove="Components\ResultModal.razor.css" />
+    <None Remove="Components\Test.razor.css" />
+    <None Remove="Pages\Index.razor.css" />
+    <None Remove="Pages\RegisterLogin.razor.css" />
+    <None Remove="Shared\LoginModal.razor.css" />
+    <None Remove="Components\Setting.razor.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Components\Letter.razor.css" />
+    <Content Include="Components\ResultModal.razor.css" />
+    <Content Include="Components\Test.razor.css" />
+    <Content Include="Pages\Index.razor.css" />
+    <Content Include="Pages\RegisterLogin.razor.css" />
+    <Content Include="Shared\LoginModal.razor.css" />
+    <Content Include="Components\Setting.razor.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Blazorise.Bootstrap" Version="1.1.1" />
+    <PackageReference Include="Blazorise.Icons.FontAwesome" Version="1.1.1" />
+    <PackageReference Include="Blazorise.LoadingIndicator" Version="1.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.10" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="6.0.10" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Shared\Speed.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

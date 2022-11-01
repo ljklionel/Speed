@@ -1,0 +1,63 @@
+﻿@page "/authentication/registerlogin"
+<div class="authentication">
+    <div class="register">
+        <form>
+            <legend>Register</legend>
+            <input type="text" placeholder="username" required/>
+            <input type="email" placeholder="email" required/>
+            <input type="password" placeholder="password"/>
+            <input type="password" placeholder="confirm password" />
+            <button class="signup" @onclick="OnRegisterClicked">Sign up</button>
+        </form>
+    </div>
+    <div class="login">
+        <form>
+            <legend>Log in</legend>
+            <input type="email" placeholder="email" required />
+            <input type="password" placeholder="password" />
+            <div class="signinforget">
+                <button class="signin" @onclick="@OnLoginClicked">Sign In</button>
+                <a class="forget" href="authentication/registerlogin">Forget password?</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@code {
+    Validations loginValidationsRef;
+    Validations registerValidationsRef;
+
+    string selectedTab = "login";
+
+    string name;
+    string email;
+    string password;
+    bool rememberMe;
+
+    private Task OnSelectedTabChanged(string name)
+    {
+        selectedTab = name;
+
+        return Task.CompletedTask;
+    }
+
+    async Task OnLoginClicked()
+    {
+        if (await loginValidationsRef.ValidateAll())
+        {
+            // do the real login here
+
+            await loginValidationsRef.ClearAll();
+        }
+    }
+
+    async Task OnRegisterClicked()
+    {
+        if (await registerValidationsRef.ValidateAll())
+        {
+            // do the real login here
+
+            await registerValidationsRef.ClearAll();
+        }
+    }
+}

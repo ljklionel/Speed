@@ -1,0 +1,79 @@
+﻿@inject IJSRuntime JSRuntime
+
+<span @ref="letter" class=@letterClass style=@letterStyle>@Character</span>
+
+@code {
+    private string? letterStyle;
+    private string letterClass = "orginal";
+    ElementReference? letter;
+
+    [Parameter]
+    public char Character { get; set; }
+    [Parameter]
+    public bool IsActive { get; set; } = false;
+    [Parameter]
+    public bool IsVisible { get; set; } = true;
+    [Parameter]
+    public bool IsWrong { get; set; } = false;
+
+    public void CorrectLetter() 
+    {
+        letterClass = "correct";
+        StateHasChanged();
+    }
+
+    public void WrongLetter() 
+    {
+        //letterStyle = "color: orangered;";
+        letterClass = "wrong";
+        this.IsWrong = true;
+        StateHasChanged();
+    }
+
+    public void OriginalLetter()
+    {
+        letterClass = "original";
+        this.IsWrong = false;
+        this.IsActive = false;
+        StateHasChanged();
+    }
+
+    public void ToggleActive()
+    {
+        IsActive = !IsActive;
+        if (IsActive) letterClass = "active";
+        StateHasChanged();
+    }
+
+    public void ToggleVisibility() 
+    {
+        IsVisible = !IsVisible;
+        if (IsVisible == false)
+        {
+            letterStyle = "visiblity: hidden;";
+        }
+    }
+
+    public string GetLetter()
+    {
+        return Char.ToString(Character);
+    }
+
+    public async Task<double> GetWidth()
+    {
+        var result = await JSRuntime.InvokeAsync<BoundingClientRect>("MyDOMGetBoundingClientRect", letter);
+        return result.Width;
+    }
+
+    public async Task<double> GetHeight()
+    {
+        var result = await JSRuntime.InvokeAsync<BoundingClientRect>("MyDOMGetBoundingClientRect", letter);
+        return result.Height;
+    }
+
+    public async Task<double> GetTop()
+    {
+        var result = await JSRuntime.InvokeAsync<BoundingClientRect>("MyDOMGetBoundingClientRect", this.letter);
+        return result.Top;
+    }
+}
