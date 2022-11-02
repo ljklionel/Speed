@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Speed.Server.Models;
+using Speed.Shared;
 
 namespace Speed.Server.Data
 {
@@ -13,5 +14,7 @@ namespace Speed.Server.Data
             IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
         {
         }
+
+        public DbSet<Score> Scores => Set<Score>();
     }
 }
