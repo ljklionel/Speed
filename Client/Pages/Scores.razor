@@ -1,0 +1,25 @@
+﻿@page "/scores"
+@inject HttpClient Http
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<AuthorizeView Roles="admin, user">
+    <Authorized>
+        <p>Score</p>
+    </Authorized>
+    <NotAuthorized>
+        <h1>You are not authorised to see this. If you have are not registered, please register and log in.</h1>
+    </NotAuthorized>
+</AuthorizeView>
+
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        var user = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User.Identity;
+        if (user != null && user.IsAuthenticated)
+        {
+            var scores = await Http.GetFromJsonAsync<List<Scores>>("api/score");
+            Console.WriteLine(scores);
+        }
+    }
+}
