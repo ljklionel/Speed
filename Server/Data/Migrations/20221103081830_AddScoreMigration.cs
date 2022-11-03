@@ -5,15 +5,17 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Speed.Server.Data.Migrations
 {
-    public partial class ScoresMigration : Migration
+    public partial class AddScoreMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            
+
             migrationBuilder.CreateTable(
                 name: "Scores",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Accuracy = table.Column<int>(type: "int", nullable: false),
                     WPM = table.Column<int>(type: "int", nullable: false),
@@ -38,6 +40,7 @@ namespace Speed.Server.Data.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+
             migrationBuilder.DropTable(
                 name: "Scores");
         }

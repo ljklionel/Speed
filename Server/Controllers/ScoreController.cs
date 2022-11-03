@@ -60,7 +60,7 @@ namespace Speed.Server.Controllers
         {
             var user = await _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
             if (user == null) return BadRequest("user not found");
-            user.Scores.Add(score);
+            _context.Scores.Add(score);
             await _context.SaveChangesAsync();
             return Ok();
         }

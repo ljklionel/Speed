@@ -3,8 +3,8 @@
     public class StateContainer
     {
         private int hard = 0;
-        private int time = 30;
-        private int timer = 30;
+        private int time = 1;
+        private int timer = 1;
         private double firstCharPosition = 0;
         private double nextCharPositionDifference = 37.5;
         private int accuracy = 0;

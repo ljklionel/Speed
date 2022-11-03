@@ -40,10 +40,13 @@
     {
         StateHasChanged();
         Score score = new Score();
-        DateTime date = new DateTime();
-        score.Id = date.Ticks;
+        //score.Id = DateTime.Now.Ticks;
+        //Console.WriteLine(score.Id);
+        score.Accuracy = stateContainer.Accuracy;
+        score.WPM = stateContainer.WPM;
+        score.Error = stateContainer.Error;
         await ScoreService.AddScore(score);
-        return metric.Show();
+        metric.Show();
     }
 
     public Task HideModal()
