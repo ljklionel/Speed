@@ -8,6 +8,7 @@ using Speed.Server.Models;
 using Speed.Shared;
 using System.Security.Claims;
 
+// https://www.youtube.com/watch?v=K_P-qJj_8Bg
 namespace Speed.Server.Controllers
 {
     [Authorize]
@@ -43,6 +44,16 @@ namespace Speed.Server.Controllers
             var user = await _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
             if (user == null) return NotFound();
             return Ok(user.Scores);
+        }
+
+        //Don't have to add[frombody] because we are using a complex type here (Score) as api will assume this comes from body already
+        [HttpPost]
+        public async Task<ActionResult<Score>> AddScore(Score score)
+        {
+            var user = await _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            if (user == null) return BadRequest("user not found");
+            user.Scores.Add(score);
+            return Ok();
         }
     }
 }

@@ -18,7 +18,8 @@ builder.Services.AddHttpClient<PublicClient>(client => client.BaseAddress = new 
 // Supply HttpClient instances that include access tokens when making requests to the server project
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("Speed.ServerAPI"));
 
-builder.Services.AddApiAuthorization();
+builder.Services.AddApiAuthorization()
+    .AddAccountClaimsPrincipalFactory<CustomUserFactory>();
 
 builder.Services.AddSingleton<StateContainer>();
 
