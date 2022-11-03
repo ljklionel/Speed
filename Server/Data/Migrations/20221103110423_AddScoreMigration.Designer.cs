@@ -12,7 +12,7 @@ using Speed.Server.Data;
 namespace Speed.Server.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221103081830_AddScoreMigration")]
+    [Migration("20221103110423_AddScoreMigration")]
     partial class AddScoreMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -194,15 +194,15 @@ namespace Speed.Server.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "d87eaffc-c113-4b59-aa4b-c00dc58cdca8",
-                            ConcurrencyStamp = "b389329d-7eb3-429e-b4dc-b3f58e529158",
+                            Id = "88ef870e-437c-4db7-9192-2e7839ba9d04",
+                            ConcurrencyStamp = "b56f558b-2789-4d1b-9d8b-b1a613f57767",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "09bf2ea5-02fc-471f-9b88-4ca58a153e4e",
-                            ConcurrencyStamp = "2e5d6075-38eb-4c59-b8ab-340c3f5d248d",
+                            Id = "14ad9d4a-6e4e-4600-9668-1b437cc66d45",
+                            ConcurrencyStamp = "d790d7ad-0df8-48ff-a302-5353b4eae3fb",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -395,6 +395,7 @@ namespace Speed.Server.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ApplicationUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Error")
@@ -465,7 +466,9 @@ namespace Speed.Server.Data.Migrations
                 {
                     b.HasOne("Speed.Server.Models.ApplicationUser", null)
                         .WithMany("Scores")
-                        .HasForeignKey("ApplicationUserId");
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Speed.Server.Models.ApplicationUser", b =>

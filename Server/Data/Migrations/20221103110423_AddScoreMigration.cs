@@ -9,7 +9,7 @@ namespace Speed.Server.Data.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            
+           
 
             migrationBuilder.CreateTable(
                 name: "Scores",
@@ -20,7 +20,7 @@ namespace Speed.Server.Data.Migrations
                     Accuracy = table.Column<int>(type: "int", nullable: false),
                     WPM = table.Column<int>(type: "int", nullable: false),
                     Error = table.Column<int>(type: "int", nullable: false),
-                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -29,8 +29,11 @@ namespace Speed.Server.Data.Migrations
                         name: "FK_Scores_AspNetUsers_ApplicationUserId",
                         column: x => x.ApplicationUserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
+
+          
 
             migrationBuilder.CreateIndex(
                 name: "IX_Scores_ApplicationUserId",
@@ -43,6 +46,7 @@ namespace Speed.Server.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Scores");
+
         }
     }
 }

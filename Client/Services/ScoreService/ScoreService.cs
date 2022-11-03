@@ -34,7 +34,7 @@ namespace Speed.Client.Services.ScoreService
         public async Task AddScore(Score score)
         {
             var result = await _http.PostAsJsonAsync("api/score", score);
-            Console.WriteLine(result);
+            Console.WriteLine(result.Content);
         }
     }
 }

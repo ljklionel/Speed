@@ -45,8 +45,8 @@
         score.Accuracy = stateContainer.Accuracy;
         score.WPM = stateContainer.WPM;
         score.Error = stateContainer.Error;
+        await metric.Show();
         await ScoreService.AddScore(score);
-        metric.Show();
     }
 
     public Task HideModal()
@@ -68,7 +68,6 @@
 
     private async Task RefreshGame()
     {
-        Console.WriteLine("modal refresh game");
         await OnRefreshCallBack.InvokeAsync();
         HideModal();
     }

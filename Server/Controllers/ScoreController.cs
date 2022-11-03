@@ -18,11 +18,13 @@ namespace Speed.Server.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ILogger<ScoreController> _logger;
 
-        public ScoreController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public ScoreController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, ILogger<ScoreController> logger)
         {
             _context = context;
             _userManager = userManager;
+            _logger = logger;
         }
 
         //One way to do get
@@ -60,6 +62,9 @@ namespace Speed.Server.Controllers
         {
             var user = await _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
             if (user == null) return BadRequest("user not found");
+            _logger.LogInformation(user.Id);
+            score.ApplicationUserId = user.Id;
+            Console.WriteLine(user.Id);
             _context.Scores.Add(score);
             await _context.SaveChangesAsync();
             return Ok();
