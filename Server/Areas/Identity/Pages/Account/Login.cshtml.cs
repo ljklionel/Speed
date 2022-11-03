@@ -15,6 +15,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Speed.Server.Models;
+using NuGet.Protocol.Plugins;
+using System.Security.Claims;
 
 namespace Speed.Server.Areas.Identity.Pages.Account
 {
@@ -116,6 +118,17 @@ namespace Speed.Server.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
+                    //var user = await _signInManager.UserManager.FindByEmailAsync(Input.Email);
+                    //var roles = await _signInManager.UserManager.GetRolesAsync(user);
+                    //var claims = new List<Claim>();
+
+                    //claims.Add(new Claim(ClaimTypes.Name, Input.Email));
+
+                    //foreach (var role in roles)
+                    //{
+                    //    claims.Add(new Claim(ClaimTypes.Role, role));
+                    //}
+                    
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)

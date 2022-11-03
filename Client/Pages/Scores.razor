@@ -2,13 +2,19 @@
 @inject HttpClient Http
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
-<AuthorizeView Roles="admin, user">
+<AuthorizeView Roles="User">
     <Authorized>
-        <p>Score</p>
+        <ul>
+            @foreach (var claim in context.User.Claims)
+            {
+                <li><b>@claim.Type</b>: @claim.Value</li>
+            }
+        </ul>
     </Authorized>
     <NotAuthorized>
         <h1>You are not authorised to see this. If you have are not registered, please register and log in.</h1>
     </NotAuthorized>
+    
 </AuthorizeView>
 
 
