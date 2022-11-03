@@ -1,0 +1,45 @@
+﻿@page "/admin"
+@inject IScoreService ScoreService
+@inject IUserService UserService
+@inject NavigationManager navigationManager
+
+<AuthorizeView Roles="Admin">
+    <Authorized>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Role</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in UserService.Users)
+                {
+                    <tr>
+                        <td>@user.Name</td>
+                        <td>@user.Role</td>
+                        <td>
+                            <button class="btn btn-primary" @onclick="(() => ShowScore(user.Name))"><Icon Name="@("fa-eye")"/></button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Authorized>
+    <NotAuthorized>
+        <h1>You are not authorised to see this.</h1>
+    </NotAuthorized>
+
+</AuthorizeView>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await UserService.GetUsers();
+    }
+
+    void ShowScore(string name)
+    {
+        navigationManager.NavigateTo($"hero/{name}");
+    }
+}

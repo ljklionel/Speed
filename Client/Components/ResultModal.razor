@@ -1,4 +1,6 @@
-﻿@inject StateContainer stateContainer
+﻿@using Speed.Shared
+@inject StateContainer stateContainer
+@inject IScoreService ScoreService
 
 <Modal @ref="metric" Style="background-color: #555555">
     <ModalContent Centered>
@@ -34,9 +36,13 @@
     private Modal metric;
     private bool isPreventNonEnter { get; set; }
 
-    public Task ShowModal()
+    public async Task ShowModal()
     {
         StateHasChanged();
+        Score score = new Score();
+        DateTime date = new DateTime();
+        score.Id = date.Ticks;
+        await ScoreService.AddScore(score);
         return metric.Show();
     }
 

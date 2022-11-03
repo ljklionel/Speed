@@ -1,0 +1,54 @@
+﻿@page "/score"
+@page "/hero/{user:string}"
+@inject IScoreService ScoreService
+
+<AuthorizeView Roles="Admin">
+    <Authorized>
+        @if (User == null)
+        {
+            <h1>User not found</h1>
+        }
+        else 
+        {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Accuracy</th>
+                    <th>WPM</th>
+                    <th>Error</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var score in ScoreService.Scores)
+                {
+                    <tr>
+                        <td>@score.Id</td>
+                        <td>@score.Accuracy</td>
+                        <td>@score.WPM</td>
+                        <td>@score.Error</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        }
+    </Authorized>
+    <NotAuthorized>
+        <h1>You are not authorised to see this.</h1>
+    </NotAuthorized>
+
+</AuthorizeView>
+
+
+@code {
+    [Parameter]
+    public string? User { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if(User != null) 
+        {
+            await ScoreService.GetSingleUserScore(User);
+        }
+    }
+}

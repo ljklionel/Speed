@@ -46,6 +46,14 @@ namespace Speed.Server.Controllers
             return Ok(user.Scores);
         }
 
+        [HttpGet("{name}")]
+        public async Task<ActionResult<List<Score>>> GetSingleUserScores(string name)
+        {
+            var user = await _userManager.FindByIdAsync(User.FindFirstValue(name));
+            if (user == null) return NotFound();
+            return Ok(user.Scores);
+        }
+
         //Don't have to add[frombody] because we are using a complex type here (Score) as api will assume this comes from body already
         [HttpPost]
         public async Task<ActionResult<Score>> AddScore(Score score)
@@ -53,6 +61,7 @@ namespace Speed.Server.Controllers
             var user = await _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
             if (user == null) return BadRequest("user not found");
             user.Scores.Add(score);
+            await _context.SaveChangesAsync();
             return Ok();
         }
     }
