@@ -1,4 +1,6 @@
-﻿@inject StateContainer stateContainer
+﻿@using Speed.Shared
+@inject StateContainer stateContainer
+@inject IScoreService ScoreService
 
 <Modal @ref="metric" Style="background-color: #555555">
     <ModalContent Centered>
@@ -34,10 +36,16 @@
     private Modal metric;
     private bool isPreventNonEnter { get; set; }
 
-    public Task ShowModal()
+    public async Task ShowModal()
     {
         StateHasChanged();
-        return metric.Show();
+        Score score = new Score();
+        score.Date = DateTime.Now.Ticks;
+        score.Accuracy = stateContainer.Accuracy;
+        score.WPM = stateContainer.WPM;
+        score.Error = stateContainer.Error;
+        await metric.Show();
+        await ScoreService.AddScore(score);
     }
 
     public Task HideModal()
@@ -59,7 +67,6 @@
 
     private async Task RefreshGame()
     {
-        Console.WriteLine("modal refresh game");
         await OnRefreshCallBack.InvokeAsync();
         HideModal();
     }

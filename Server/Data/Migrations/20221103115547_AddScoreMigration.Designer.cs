@@ -12,8 +12,8 @@ using Speed.Server.Data;
 namespace Speed.Server.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221103040358_SeedRoles")]
-    partial class SeedRoles
+    [Migration("20221103115547_AddScoreMigration")]
+    partial class AddScoreMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -194,15 +194,15 @@ namespace Speed.Server.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "ae0f162e-8edb-4e27-9fe5-bd42d0a03239",
-                            ConcurrencyStamp = "178b7e5d-721e-40a4-8d97-2f834b85d404",
+                            Id = "c662762f-1c8a-4b77-9eb6-acd2774a0d3e",
+                            ConcurrencyStamp = "9adbf07f-9c2a-4d39-a28b-0f71ee1cb852",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "982d211b-0a47-401b-bdf3-dd2bf2a6f067",
-                            ConcurrencyStamp = "8bb42180-b2c6-4807-b710-118bd39f07f2",
+                            Id = "e06b40dc-eef3-4804-a3d6-7e7ee076b7dd",
+                            ConcurrencyStamp = "70a197ab-de61-4faf-b488-843bcc928d14",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -385,17 +385,20 @@ namespace Speed.Server.Data.Migrations
 
             modelBuilder.Entity("Speed.Shared.Score", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
                     b.Property<int>("Accuracy")
                         .HasColumnType("int");
 
                     b.Property<string>("ApplicationUserId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<long>("Date")
+                        .HasColumnType("bigint");
 
                     b.Property<int>("Error")
                         .HasColumnType("int");

@@ -18,11 +18,13 @@ namespace Speed.Server.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ILogger<ScoreController> _logger;
 
-        public ScoreController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public ScoreController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, ILogger<ScoreController> logger)
         {
             _context = context;
             _userManager = userManager;
+            _logger = logger;
         }
 
         //One way to do get
@@ -46,13 +48,25 @@ namespace Speed.Server.Controllers
             return Ok(user.Scores);
         }
 
+        [HttpGet("{name}")]
+        public async Task<ActionResult<List<Score>>> GetSingleUserScores(string name)
+        {
+            var user = await _userManager.FindByNameAsync(name);
+            //var user = await _userManager.FindByIdAsync(User.FindFirstValue(name));
+            if (user == null) return NotFound();
+            return Ok(user.Scores);
+        }
+
         //Don't have to add[frombody] because we are using a complex type here (Score) as api will assume this comes from body already
         [HttpPost]
         public async Task<ActionResult<Score>> AddScore(Score score)
         {
             var user = await _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
             if (user == null) return BadRequest("user not found");
-            user.Scores.Add(score);
+            _logger.LogInformation(user.Id);
+            score.ApplicationUserId = user.Id;
+            _context.Scores.Add(score);
+            await _context.SaveChangesAsync();
             return Ok();
         }
     }

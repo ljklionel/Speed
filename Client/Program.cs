@@ -5,6 +5,8 @@ using Speed.Client;
 using Blazorise;
 using Blazorise.Bootstrap;
 using Blazorise.Icons.FontAwesome;
+using Speed.Client.Services.ScoreService;
+using Speed.Client.Services.UserService;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -17,6 +19,9 @@ builder.Services.AddHttpClient<PublicClient>(client => client.BaseAddress = new 
 
 // Supply HttpClient instances that include access tokens when making requests to the server project
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("Speed.ServerAPI"));
+
+builder.Services.AddScoped<IScoreService, ScoreService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddApiAuthorization()
     .AddAccountClaimsPrincipalFactory<CustomUserFactory>();
