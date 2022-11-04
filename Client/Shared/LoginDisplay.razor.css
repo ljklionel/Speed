@@ -1,0 +1,12 @@
+﻿a {
+    color: cyan;
+}
+
+button {
+    background-color: cyan;
+    color: #555555;
+}
+
+.auth-display {
+    display: flex;
+}

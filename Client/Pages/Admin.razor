@@ -16,11 +16,13 @@
                     <tr>
                         <th>Name</th>
                         <th>Role</th>
+                        <th>Score</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var user in UserService.Users)
                     {
+
                         <tr>
                             <td>@user.Name</td>
                             @foreach (var role in user.Role)
@@ -28,7 +30,7 @@
                                 <td>@role</td>
                             }
                             <td>
-                                <button class="btn btn-primary" @onclick="(() => ShowScore(user.Name))"><Icon Name="@("fa-eye")" /></button>
+                                <button class="btn" @onclick="(() => ShowScore(user.Name))"><Icon Name="@("fa-eye")" /></button>
                             </td>
                         </tr>
                     }

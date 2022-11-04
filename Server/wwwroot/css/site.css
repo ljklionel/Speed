@@ -5,10 +5,43 @@ a.navbar-brand {
   white-space: normal;
   text-align: center;
   word-break: break-all;
+  color: cyan;
+  font-size: 40px;
+}
+ 
+.nav-link, .nav-item, .link { 
+    color: cyan;
+} 
+
+h1, h2, hr {
+    color: cyan; 
+}
+
+.title {
+    text-align: center;
+}
+
+.row {
+    display: flex;
+    justify-content: center;
+}
+
+.form-control { 
+    background-color: #333333;
+    border-color: cyan; 
+}
+
+.btn {
+    background-color: cyan;
+    color: #555555;
+}
+
+label {
+    color: #999999;
 }
 
 a {
-  color: #0077cc;
+  color: #0077cc; 
 }
 
 .form-control:focus {
@@ -72,6 +105,7 @@ html {
 
 body {
   margin-bottom: 60px;
+  background-color: #555555;
 }
 .footer {
   position: absolute;

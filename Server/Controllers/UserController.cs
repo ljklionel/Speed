@@ -52,17 +52,28 @@ namespace Speed.Server.Controllers
                 var usersInRoles = await (from u in _context.Users
                                          join userRoles in _context.UserRoles on u.Id equals userRoles.UserId
                                          join role in _context.Roles on userRoles.RoleId equals role.Id
-                                         select new { UserName = u.UserName, EmailConfirmed = u.EmailConfirmed, RoleName = role.Name })
+                                         select new { UserName = u.UserName, RoleName = role.Name })
                                         .ToListAsync();
                 
                 List<User> users = new List<User>();
+                Dictionary<string, string> userDict = new Dictionary<string, string>();
                 foreach (var userInRoles in usersInRoles)
                 {
                     Console.WriteLine(userInRoles);
+                    if (userDict.ContainsKey(userInRoles.UserName))
+                    {
+                        userDict[userInRoles.UserName] += ", " + userInRoles.RoleName;
+                    }
+                    else
+                    {
+                        userDict[userInRoles.UserName] = userInRoles.RoleName;
+                    }
+                }
+                foreach (var keyVal in userDict)
+                {
                     User _user = new User();
-                    _user.Name = userInRoles.UserName;
-                    _user.EmailConfirmed = userInRoles.EmailConfirmed;
-                    _user.Role.Add(userInRoles.RoleName);
+                    _user.Name = keyVal.Key;
+                    _user.Role.Add(keyVal.Value);
                     users.Add(_user);
                 }
                 return Ok(users);

@@ -10,7 +10,7 @@ namespace Speed.Shared
     {
         public string? Name { get; set; }
 
-        public bool EmailConfirmed { get; set; }
+        //public bool EmailConfirmed { get; set; }
         public List<string> Role { get; set; } = new List<string>();
     }
 }

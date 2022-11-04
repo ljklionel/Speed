@@ -11,22 +11,24 @@
     <None Remove="Components\Result.razor.css" />
     <None Remove="Components\ResultModal.razor.css" />
     <None Remove="Components\Test.razor.css" />
+    <None Remove="Pages\Admin.razor.css" />
     <None Remove="Pages\Index.razor.css" />
-    <None Remove="Pages\RegisterLogin.razor.css" />
     <None Remove="Pages\Score.razor.css" />
-    <None Remove="Shared\LoginModal.razor.css" />
+    <None Remove="Pages\Scores.razor.css" />
     <None Remove="Components\Setting.razor.css" />
+    <None Remove="Shared\LoginDisplay.razor.css" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Components\Letter.razor.css" />
     <Content Include="Components\ResultModal.razor.css" />
     <Content Include="Components\Test.razor.css" />
+    <Content Include="Pages\Admin.razor.css" />
     <Content Include="Pages\Index.razor.css" />
-    <Content Include="Pages\RegisterLogin.razor.css" />
     <Content Include="Pages\Score.razor.css" />
-    <Content Include="Shared\LoginModal.razor.css" />
+    <Content Include="Pages\Scores.razor.css" />
     <Content Include="Components\Setting.razor.css" />
+    <Content Include="Shared\LoginDisplay.razor.css" />
   </ItemGroup>
 
   <ItemGroup>

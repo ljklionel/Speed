@@ -4,30 +4,34 @@
 @inject NavigationManager Navigation
 @inject SignOutSessionStateManager SignOutManager
 
-<AuthorizeView>
+<AuthorizeView Roles="User">
     <Authorized>
-        <a href="authentication/profile">Hello, @context.User.Identity?.Name!</a>
-        <button class="nav-link btn btn-link" @onclick="BeginSignOut">Log out</button>
+        <div class="auth-display">
+            @foreach(var claim in context.User.Claims)
+            {
+                if (claim.Type == "role" && claim.Value == "Admin")
+                {
+                    <a href="admin">Admin</a>
+                    break;
+                }
+            }
+            <a href="scores">Score</a>
+            <a href="authentication/profile">Hello, @context.User.Identity?.Name!</a>
+            <button class="nav-link btn btn-link" @onclick="BeginSignOut">Log out</button>
+        </div>
     </Authorized>
     <NotAuthorized>
-        <a href="authentication/register">Register</a>
-        <a href="authentication/login">Log in</a>
-        @*<Icon Name="IconName.UserCircle" @onclick="ShowLogin"></Icon>*@
-        <LoginModal @ref="login"/>
+        <div class="auth-display">
+            <a href="authentication/register">Register</a>
+            <a href="authentication/login">Log in</a>
+        </div>
     </NotAuthorized>
 </AuthorizeView>
 
 @code{
-    private LoginModal? login;
-
     private async Task BeginSignOut(MouseEventArgs args)
     {
         await SignOutManager.SetSignOutState();
-        Navigation.NavigateTo("authentication/logout");
-    }
-
-    private void ShowLogin() 
-    {
-        login.ShowModal();
+        Navigation.NavigateTo("/authentication/logout");
     }
 }

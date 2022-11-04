@@ -28,44 +28,40 @@
 
     private static Timer? timer;  
 
-    private Task OnEasyClick() 
+    private async Task OnEasyClick() 
     {
         easyStyle = "opacity: 100%;";
         hardStyle = "opacity: 50%;";
         stateContainer.Difficulty = 0;
         StateHasChanged();
-        ChangeSetting();
-        return Task.CompletedTask;
+        await ChangeSetting();
     }
 
-    private Task OnHardClick()
+    private async Task OnHardClick()
     {
         easyStyle = "opacity: 50%;";
         hardStyle = "opacity: 100%;";
         stateContainer.Difficulty = 1;
         StateHasChanged();
-        ChangeSetting();
-        return Task.CompletedTask;
+        await ChangeSetting();
     }
 
-    private Task OnThirtyClick()
+    private async Task OnThirtyClick()
     {
         thirtyStyle = "opacity: 100%;";
         sixtyStyle = "opacity: 50%;";
         stateContainer.Duration = 30;
         StateHasChanged();
-        ChangeSetting();
-        return Task.CompletedTask;
+        await ChangeSetting();
     }
 
-    private Task OnSixtyClick()
+    private async Task OnSixtyClick()
     {
         thirtyStyle = "opacity: 50%;";
         sixtyStyle = "opacity: 100%;";
         stateContainer.Duration = 60;
         StateHasChanged();
-        ChangeSetting();
-        return Task.CompletedTask;
+        await ChangeSetting();
     }
 
     public void RefreshGame()

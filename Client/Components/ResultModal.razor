@@ -2,39 +2,74 @@
 @inject StateContainer stateContainer
 @inject IScoreService ScoreService
 
-<Modal @ref="metric" Style="background-color: #555555">
-    <ModalContent Centered>
-        <ModalHeader>
-            <ModalTitle Style="color: #555555">Here are your results!</ModalTitle>
-            <CloseButton tabindex="-1" />
-        </ModalHeader>
-        <ModalBody>
-            <div class="metric">
-                <div class="accuracy">
-                    <div class="head">Accuracy</div>
-                    <div class="accuracy-count">@stateContainer.Accuracy</div>
-                </div>
-                <div class="wpm">
-                    <div class="head">Words/min</div>
-                    <div class="wpm-count">@stateContainer.WPM</div>
-                </div>
-                <div class="errors">
-                    <div class="head">Errors</div>
-                    <div class="errors-count">@stateContainer.Error</div>
-                </div>
-            </div>
-            <img tabindex="0" src="refresh-black.svg" alt="Referesh button" class="refresh" @onkeydown=@RefreshGameOnEnter @onkeydown:preventDefault="@isPreventNonEnter" onclick=@RefreshGame />
-        </ModalBody>
-        <ModalFooter Style="text-align: center">Your results have been recorded.</ModalFooter>
-    </ModalContent>
-</Modal>
+<AuthorizeView>
+    <Authorized>
+        @{isAuth = context.User.Identity.IsAuthenticated;}
+        <Modal @ref="metric" Style="background-color: #555555">
+            <ModalContent Centered>
+                <ModalHeader>
+                    <ModalTitle Style="color: #555555">Here are your results!</ModalTitle>
+                    <CloseButton tabindex="-1" />
+                </ModalHeader>
+                <ModalBody>
+                    <div class="metric">
+                        <div class="accuracy">
+                            <div class="head">Accuracy</div>
+                            <div class="accuracy-count">@stateContainer.Accuracy</div>
+                        </div>
+                        <div class="wpm">
+                            <div class="head">Words/min</div>
+                            <div class="wpm-count">@stateContainer.WPM</div>
+                        </div>
+                        <div class="errors">
+                            <div class="head">Errors</div>
+                            <div class="errors-count">@stateContainer.Error</div>
+                        </div>
+                    </div>
+                    <img tabindex="0" src="refresh-black.svg" alt="Referesh button" class="refresh" @onkeydown=@RefreshGameOnEnter @onkeydown:preventDefault="@isPreventNonEnter" onclick=@RefreshGame />
+                </ModalBody>
+                <ModalFooter Style="text-align: center">Your results have been recorded.</ModalFooter>
+            </ModalContent>
+        </Modal>
+    </Authorized>
+    <NotAuthorized>
+        @{isAuth = context.User.Identity.IsAuthenticated;}
+        <Modal @ref="metric" Style="background-color: #555555">
+            <ModalContent Centered>
+                <ModalHeader>
+                    <ModalTitle Style="color: #555555">Here are your results!</ModalTitle>
+                    <CloseButton tabindex="-1" />
+                </ModalHeader>
+                <ModalBody>
+                    <div class="metric">
+                        <div class="accuracy">
+                            <div class="head">Accuracy</div>
+                            <div class="accuracy-count">@stateContainer.Accuracy</div>
+                        </div>
+                        <div class="wpm">
+                            <div class="head">Words/min</div>
+                            <div class="wpm-count">@stateContainer.WPM</div>
+                        </div>
+                        <div class="errors">
+                            <div class="head">Errors</div>
+                            <div class="errors-count">@stateContainer.Error</div>
+                        </div>
+                    </div>
+                    <img tabindex="0" src="refresh-black.svg" alt="Referesh button" class="refresh" @onkeydown=@RefreshGameOnEnter @onkeydown:preventDefault="@isPreventNonEnter" onclick=@RefreshGame />
+                </ModalBody>
+            </ModalContent>
+        </Modal>
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
     [Parameter]
     public EventCallback<string> OnRefreshCallBack { get; set; }
 
-    private Modal metric;
+    private Modal? metric;
     private bool isPreventNonEnter { get; set; }
+
+    private bool isAuth = false;
 
     public async Task ShowModal()
     {
@@ -45,7 +80,10 @@
         score.WPM = stateContainer.WPM;
         score.Error = stateContainer.Error;
         await metric.Show();
-        await ScoreService.AddScore(score);
+        if (isAuth) 
+        {
+            await ScoreService.AddScore(score);
+        }   
     }
 
     public Task HideModal()
@@ -53,11 +91,11 @@
         return metric.Hide();
     }
 
-    private void RefreshGameOnEnter(KeyboardEventArgs args)
+    private async void RefreshGameOnEnter(KeyboardEventArgs args)
     {
         if (args.Key == "Enter")
         {
-            RefreshGame();
+            await RefreshGame();
         }
         else
         {
@@ -68,6 +106,6 @@
     private async Task RefreshGame()
     {
         await OnRefreshCallBack.InvokeAsync();
-        HideModal();
+        await HideModal();
     }
 }
