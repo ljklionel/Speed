@@ -8,7 +8,9 @@ namespace Speed.Shared
 {
     public class User
     {
-        public string Name { get; set; }
-        public string Role { get; set; }
+        public string? Name { get; set; }
+
+        public bool EmailConfirmed { get; set; }
+        public List<string> Role { get; set; } = new List<string>();
     }
 }

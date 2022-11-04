@@ -10,6 +10,7 @@ namespace Speed.Shared
     public class Score
     {
         public long Id { get; set; }
+        public long Date { get; set; }
         public int Accuracy { get; set; }
         public int WPM { get; set; }
         public int Error { get; set; }

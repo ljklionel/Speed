@@ -192,15 +192,15 @@ namespace Speed.Server.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "88ef870e-437c-4db7-9192-2e7839ba9d04",
-                            ConcurrencyStamp = "b56f558b-2789-4d1b-9d8b-b1a613f57767",
+                            Id = "c662762f-1c8a-4b77-9eb6-acd2774a0d3e",
+                            ConcurrencyStamp = "9adbf07f-9c2a-4d39-a28b-0f71ee1cb852",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "14ad9d4a-6e4e-4600-9668-1b437cc66d45",
-                            ConcurrencyStamp = "d790d7ad-0df8-48ff-a302-5353b4eae3fb",
+                            Id = "e06b40dc-eef3-4804-a3d6-7e7ee076b7dd",
+                            ConcurrencyStamp = "70a197ab-de61-4faf-b488-843bcc928d14",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -393,8 +393,10 @@ namespace Speed.Server.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ApplicationUserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<long>("Date")
+                        .HasColumnType("bigint");
 
                     b.Property<int>("Error")
                         .HasColumnType("int");
@@ -464,9 +466,7 @@ namespace Speed.Server.Data.Migrations
                 {
                     b.HasOne("Speed.Server.Models.ApplicationUser", null)
                         .WithMany("Scores")
-                        .HasForeignKey("ApplicationUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ApplicationUserId");
                 });
 
             modelBuilder.Entity("Speed.Server.Models.ApplicationUser", b =>

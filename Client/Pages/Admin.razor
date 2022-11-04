@@ -5,26 +5,36 @@
 
 <AuthorizeView Roles="Admin">
     <Authorized>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Role</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var user in UserService.Users)
-                {
+        @if (UserService.Users == null)
+        {
+            <h1>User not found</h1>
+        }
+        else
+        {
+            <table class="table">
+                <thead>
                     <tr>
-                        <td>@user.Name</td>
-                        <td>@user.Role</td>
-                        <td>
-                            <button class="btn btn-primary" @onclick="(() => ShowScore(user.Name))"><Icon Name="@("fa-eye")"/></button>
-                        </td>
+                        <th>Name</th>
+                        <th>Role</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var user in UserService.Users)
+                    {
+                        <tr>
+                            <td>@user.Name</td>
+                            @foreach (var role in user.Role)
+                            {
+                                <td>@role</td>
+                            }
+                            <td>
+                                <button class="btn btn-primary" @onclick="(() => ShowScore(user.Name))"><Icon Name="@("fa-eye")" /></button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
     </Authorized>
     <NotAuthorized>
         <h1>You are not authorised to see this.</h1>
@@ -40,6 +50,9 @@
 
     void ShowScore(string name)
     {
-        navigationManager.NavigateTo($"hero/{name}");
+        var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(name);
+        var encoded = System.Convert.ToBase64String(plainTextBytes);
+        Console.WriteLine("encoded: " + encoded);
+        navigationManager.NavigateTo($"score/{encoded}");
     }
 }

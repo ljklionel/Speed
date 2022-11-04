@@ -13,6 +13,7 @@
     <None Remove="Components\Test.razor.css" />
     <None Remove="Pages\Index.razor.css" />
     <None Remove="Pages\RegisterLogin.razor.css" />
+    <None Remove="Pages\Score.razor.css" />
     <None Remove="Shared\LoginModal.razor.css" />
     <None Remove="Components\Setting.razor.css" />
   </ItemGroup>
@@ -23,6 +24,7 @@
     <Content Include="Components\Test.razor.css" />
     <Content Include="Pages\Index.razor.css" />
     <Content Include="Pages\RegisterLogin.razor.css" />
+    <Content Include="Pages\Score.razor.css" />
     <Content Include="Shared\LoginModal.razor.css" />
     <Content Include="Components\Setting.razor.css" />
   </ItemGroup>

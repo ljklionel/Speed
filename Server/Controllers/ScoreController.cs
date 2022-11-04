@@ -51,7 +51,8 @@ namespace Speed.Server.Controllers
         [HttpGet("{name}")]
         public async Task<ActionResult<List<Score>>> GetSingleUserScores(string name)
         {
-            var user = await _userManager.FindByIdAsync(User.FindFirstValue(name));
+            var user = await _userManager.FindByNameAsync(name);
+            //var user = await _userManager.FindByIdAsync(User.FindFirstValue(name));
             if (user == null) return NotFound();
             return Ok(user.Scores);
         }
@@ -64,7 +65,6 @@ namespace Speed.Server.Controllers
             if (user == null) return BadRequest("user not found");
             _logger.LogInformation(user.Id);
             score.ApplicationUserId = user.Id;
-            Console.WriteLine(user.Id);
             _context.Scores.Add(score);
             await _context.SaveChangesAsync();
             return Ok();

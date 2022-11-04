@@ -18,7 +18,10 @@
                 @foreach (var score in ScoreService.Scores)
                 {
                     <tr>
-                        <td>@score.Id</td>
+                        @{
+                                DateTime dt = new DateTime(score.Date);
+                            <td>@dt.ToString()</td>
+                            }
                         <td>@score.Accuracy</td>
                         <td>@score.WPM</td>
                         <td>@score.Error</td>

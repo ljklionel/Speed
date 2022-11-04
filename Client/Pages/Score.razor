@@ -22,8 +22,11 @@
             <tbody>
                 @foreach (var score in ScoreService.Scores)
                 {
-                    <tr>
-                        <td>@score.Id</td>
+                        <tr>
+                            @{
+                                DateTime dt = new DateTime(score.Date);
+                                <td>@dt.ToString()</td>
+                            }
                         <td>@score.Accuracy</td>
                         <td>@score.WPM</td>
                         <td>@score.Error</td>
@@ -46,9 +49,14 @@
 
     protected override async Task OnParametersSetAsync()
     {
+        Console.WriteLine("test");
+        Console.WriteLine(User);
+        var base64EncodedBytes = System.Convert.FromBase64String(User);
+        var decoded = System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
+        Console.WriteLine("decoded: " + decoded);
         if(User != null) 
         {
-            await ScoreService.GetSingleUserScore(User);
+            await ScoreService.GetSingleUserScore(decoded);
         }
     }
 }
