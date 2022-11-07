@@ -7,6 +7,19 @@
     <UserSecretsId>Speed.Server-4D1689B6-8768-4175-8BF8-8FD813BC0294</UserSecretsId>
   </PropertyGroup>
 
+<!-- Custom property group added to add the environment name during publish
+
+    The EnvironmentName property is used during the publish
+    for the environment variable in web.config
+-->
+    <PropertyGroup Condition=" '$(Configuration)' == '' Or '$(Configuration)' == 'Debug'">
+	    <EnvironmentName>Development</EnvironmentName>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' != '' AND '$(Configuration)' != 'Debug' ">
+	    <EnvironmentName>Production</EnvironmentName>
+    </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Blazorise.Bootstrap" Version="1.1.1" />
     <PackageReference Include="Blazorise.Icons.FontAwesome" Version="1.1.1" />
