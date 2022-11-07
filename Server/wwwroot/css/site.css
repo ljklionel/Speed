@@ -26,9 +26,10 @@ h1, h2, hr {
     justify-content: center;
 }
 
-.form-control { 
+.form-control {
     background-color: #333333;
-    border-color: cyan; 
+    border-color: cyan;
+    color: #999999;
 }
 
 .btn {
@@ -45,8 +46,10 @@ a {
 }
 
 .form-control:focus {
-    border-color: #0077cc;
-    box-shadow: 0 0 0 0.2rem #0077cc;
+    border-color: cyan;
+    box-shadow: 0 0 0 0.2rem cyan;
+    color: #999999;
+    background-color: #333333;
 }
 
 .btn-primary {
